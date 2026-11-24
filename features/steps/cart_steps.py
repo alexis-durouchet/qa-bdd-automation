@@ -226,6 +226,14 @@ def register_customer(context):
     driver = context.driver
     wait = context.wait
 
+    # Recuperation des donnees externalisees
+    user = context.test_data["user"]
+    address = context.test_data["address"]
+    birth_date = user["birth_date"]
+
+    full_name = f'{user["first_name"]} {user["last_name"]}'
+
+    # Acces a la page d'inscription
     wait.until(
         EC.element_to_be_clickable(
             (By.CSS_SELECTOR,
@@ -239,7 +247,7 @@ def register_customer(context):
 
     driver.find_element(
         By.CSS_SELECTOR, '[data-qa="signup-name"]'
-    ).send_keys("Lucas Martin")
+    ).send_keys(full_name)
 
     driver.find_element(
         By.CSS_SELECTOR, '[data-qa="signup-email"]'
@@ -253,68 +261,94 @@ def register_customer(context):
         EC.url_to_be(f"{context.base_url}/signup")
     )
 
+    # Selection de la civilite
+    titles = {
+        "Mr": "id_gender1",
+        "Mrs": "id_gender2"
+    }
+
     wait.until(
         EC.element_to_be_clickable(
-            (By.ID, "id_gender1")
+            (By.ID, titles[user["title"]])
         )
     ).click()
 
+    # Mot de passe provenant du fichier .env
     driver.find_element(
         By.ID, "password"
-    ).send_keys("QaTest2026!E2E")
+    ).send_keys(context.test_password)
 
+    # Date de naissance
     Select(driver.find_element(
         By.ID, "days"
-    )).select_by_visible_text("15")
+    )).select_by_visible_text(birth_date["day"])
 
     Select(driver.find_element(
         By.ID, "months"
-    )).select_by_visible_text("June")
+    )).select_by_visible_text(birth_date["month"])
 
     Select(driver.find_element(
         By.ID, "years"
-    )).select_by_visible_text("1995")
+    )).select_by_visible_text(birth_date["year"])
 
+    # Preferences utilisateur
+    newsletter = driver.find_element(
+        By.ID, "newsletter"
+    )
+
+    if newsletter.is_selected() != user["newsletter"]:
+        newsletter.click()
+
+    partner_offers = driver.find_element(
+        By.ID, "optin"
+    )
+
+    if partner_offers.is_selected() != user["partner_offers"]:
+        partner_offers.click()
+
+    # Identite
     driver.find_element(
         By.ID, "first_name"
-    ).send_keys("Lucas")
+    ).send_keys(user["first_name"])
 
     driver.find_element(
         By.ID, "last_name"
-    ).send_keys("Martin")
+    ).send_keys(user["last_name"])
 
+    # Adresse
     driver.find_element(
         By.ID, "company"
-    ).send_keys("QA Automation Lab")
+    ).send_keys(address["company"])
 
     driver.find_element(
         By.ID, "address1"
-    ).send_keys("42 Test Avenue")
+    ).send_keys(address["street"])
 
     driver.find_element(
         By.ID, "address2"
-    ).send_keys("Apartment 5")
+    ).send_keys(address["street_2"])
 
     Select(driver.find_element(
         By.ID, "country"
-    )).select_by_visible_text("United States")
+    )).select_by_visible_text(address["country"])
 
     driver.find_element(
         By.ID, "state"
-    ).send_keys("California")
+    ).send_keys(address["state"])
 
     driver.find_element(
         By.ID, "city"
-    ).send_keys("San Francisco")
+    ).send_keys(address["city"])
 
     driver.find_element(
         By.ID, "zipcode"
-    ).send_keys("94105")
+    ).send_keys(address["zipcode"])
 
     driver.find_element(
         By.ID, "mobile_number"
-    ).send_keys("4155550142")
+    ).send_keys(address["mobile"])
 
+    # Validation de l'inscription
     driver.find_element(
         By.CSS_SELECTOR, '[data-qa="create-account"]'
     ).click()
@@ -401,25 +435,28 @@ def submit_payment(context):
 
     driver = context.driver
 
+    # Recuperation des donnees du fichier .env
+    payment = context.payment_data
+
     driver.find_element(
         By.NAME, "name_on_card"
-    ).send_keys("Lucas Martin")
+    ).send_keys(payment["name"])
 
     driver.find_element(
         By.NAME, "card_number"
-    ).send_keys("4111111111111111")
+    ).send_keys(payment["card_number"])
 
     driver.find_element(
         By.NAME, "cvc"
-    ).send_keys("123")
+    ).send_keys(payment["cvc"])
 
     driver.find_element(
         By.NAME, "expiry_month"
-    ).send_keys("12")
+    ).send_keys(payment["expiry_month"])
 
     driver.find_element(
         By.NAME, "expiry_year"
-    ).send_keys("2030")
+    ).send_keys(payment["expiry_year"])
 
     driver.find_element(
         By.ID, "submit"

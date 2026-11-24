@@ -1,0 +1,30 @@
+USING RUNNER: behave.runner:Runner
+Feature: Shopping cart and checkout
+
+  Scenario: Complete a purchase as a new customer
+    Given I am on the Automation Exercise homepage ... passed in 6.441s
+    When I add "Blue Top" to my cart ... passed in 0.682s
+    And I add "Summer White Top" to my cart ... passed in 0.634s
+    And I open my shopping cart ... passed in 0.383s
+    Then my cart should contain the following products: ... passed in 0.109s
+      | product          | quantity | unit_price | subtotal |
+      | Blue Top         | 1        | 500        | 500      |
+      | Summer White Top | 1        | 400        | 400      |
+    When I proceed to checkout ... passed in 0.072s
+    And I register a new customer account ... passed in 2.516s
+    Then my account should be successfully created ... passed in 0.762s
+    When I return to my cart ... passed in 0.547s
+    And I proceed to checkout ... passed in 0.896s
+    Then the order total should be 900 rupees ... passed in 0.022s
+    When I place my order ... passed in 0.270s
+    And I submit valid test payment information ... passed in 1.594s
+    Then my order should be successfully confirmed ... passed in 0.029s
+    When I request the invoice download ... passed in 0.328s
+    Then the invoice download link should be valid ... passed in 0.000s
+    When I delete my customer account ... passed in 1.370s
+    Then my account should be successfully deleted ... passed in 0.867s
+
+1 feature passed, 0 failed, 0 skipped
+1 scenario passed, 0 failed, 0 skipped
+18 steps passed, 0 failed, 0 skipped
+Took 0min 17.524s

@@ -59,15 +59,33 @@ def before_all(context):
 
 def before_scenario(context, scenario):
 
+    # Configuration du navigateur
+    options = webdriver.ChromeOptions()
+
+    # Detection de l'environnement CI
+    is_ci = os.getenv("CI") == "true"
+
+    # Mode headless pour les executions GitHub Actions
+    if is_ci:
+        options.add_argument("--headless")
+        options.add_argument("--no-sandbox")
+        options.add_argument("--disable-dev-shm-usage")
+        options.add_argument("--window-size=1920,1080")
+
     # Initialisation du navigateur
-    context.driver = webdriver.Chrome()
-    context.driver.maximize_window()
+    context.driver = webdriver.Chrome(options=options)
+
+    # Maximisation de la fenetre en execution locale
+    if not is_ci:
+        context.driver.maximize_window()
 
     # Configuration des attentes Selenium
     context.wait = WebDriverWait(context.driver, 20)
 
     # Adresse unique pour chaque execution
-    context.email = f"qa.bdd.test.{uuid4().hex[:12]}@example.com"
+    email_prefix = context.test_data["user"]["email_prefix"]
+
+    context.email = f"{email_prefix}.{uuid4().hex[:12]}@example.com"
 
     # Blocage des requetes publicitaires
     context.driver.execute_cdp_cmd("Network.enable", {})

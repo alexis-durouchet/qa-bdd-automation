@@ -1,0 +1,26 @@
+
+{
+  "user": {
+    "first_name": "Lucas",
+    "last_name": "Martin",
+    "email_prefix": "qa.bdd.test",
+    "title": "Mr",
+    "birth_date": {
+      "day": "15",
+      "month": "June",
+      "year": "1995"
+    },
+    "newsletter": false,
+    "partner_offers": false
+  },
+  "address": {
+    "company": "QA Automation Lab",
+    "street": "42 Test Avenue",
+    "street_2": "Apartment 5",
+    "country": "United States",
+    "state": "California",
+    "city": "San Francisco",
+    "zipcode": "94105",
+    "mobile": "4155550142"
+  }
+}

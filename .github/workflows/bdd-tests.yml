@@ -15,7 +15,7 @@ on:
 
 # Configuration des permissions
 permissions:
-  contents: read
+  contents: write
 
 # Definition du job
 jobs:
@@ -67,3 +67,18 @@ jobs:
           name: bdd-test-report
           path: reports/ci_bdd_report_*.txt
           retention-days: 30
+
+      # Publication automatique du rapport dans le depot
+      - name: Publish test report
+        if: always() && github.event_name == 'push'
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add reports/ci_bdd_report_*.txt
+
+          if ! git diff --cached --quiet; then
+            git commit -m "docs: add automated BDD test report [skip ci]"
+            git push origin HEAD:${{ github.ref_name }}
+          fi

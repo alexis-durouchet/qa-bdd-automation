@@ -1,0 +1,76 @@
+USING RUNNER: behave.runner:Runner
+Feature: Shopping cart and checkout
+
+  Scenario: Complete a purchase as a new customer
+    Given I am on the Automation Exercise homepage ... passed in 6.631s
+    When I add "Blue Top" to my cart ... passed in 1.220s
+    And I add "Summer White Top" to my cart ... passed in 1.158s
+    And I open my shopping cart ... passed in 0.577s
+    Then my cart should contain the following products: ... passed in 0.193s
+      | product          | quantity | unit_price | subtotal |
+      | Blue Top         | 1        | 500        | 500      |
+      | Summer White Top | 1        | 400        | 400      |
+    When I proceed to checkout ... passed in 0.102s
+    And I register a new customer account ... passed in 4.401s
+    Then my account should be successfully created ... passed in 1.081s
+    When I return to my cart ... passed in 0.989s
+    And I proceed to checkout ... passed in 1.819s
+    Then the order total should be 900 rupees ... passed in 0.020s
+    When I place my order ... passed in 0.146s
+    And I submit valid test payment information ... error in 0.010s
+Traceback (most recent call last):
+  File "/opt/hostedtoolcache/Python/3.14.10/x64/lib/python3.14/site-packages/behave/model.py", line 1991, in run
+    match.run(runner.context)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.14.10/x64/lib/python3.14/site-packages/behave/matchers.py", line 105, in run
+    self.func(context, *args, **kwargs)
+    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "features/steps/cart_steps.py", line 441, in submit_payment
+    driver.find_element(
+    ~~~~~~~~~~~~~~~~~~~^
+        By.NAME, "name_on_card"
+        ^^^^^^^^^^^^^^^^^^^^^^^
+    ).send_keys(payment["name"])
+    ^
+  File "/opt/hostedtoolcache/Python/3.14.10/x64/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 1011, in find_element
+    return self.execute(Command.FIND_ELEMENT, {"using": by, "value": value})["value"]
+           ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.14.10/x64/lib/python3.14/site-packages/selenium/webdriver/remote/webdriver.py", line 569, in execute
+    self.error_handler.check_response(response)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.14.10/x64/lib/python3.14/site-packages/selenium/webdriver/remote/errorhandler.py", line 234, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.NoSuchElementException: Message: no such element: Unable to locate element: {"method":"css selector","selector":"[name="name_on_card"]"}
+  (Session info: chrome=157.0.8103.78); For documentation on this error, please visit: https://www.selenium.dev/documentation/webdriver/troubleshooting/errors#nosuchelementexception
+Stacktrace:
+#0 0x61579dacccaa <unknown>
+#1 0x61579d400cc5 <unknown>
+#2 0x61579d4467df <unknown>
+#3 0x61579d446971 <unknown>
+#4 0x61579d484734 <unknown>
+#5 0x61579d482db3 <unknown>
+#6 0x61579d4826c1 <unknown>
+#7 0x61579d43d557 <unknown>
+#8 0x61579d43c86e <unknown>
+#9 0x61579d43d341 <unknown>
+#10 0x61579da8f79c <unknown>
+#11 0x61579da8dfcd <unknown>
+#12 0x61579da78df5 <unknown>
+#13 0x61579da8ec0a <unknown>
+#14 0x61579da61b99 <unknown>
+#15 0x61579dab7318 <unknown>
+#16 0x61579dab74b5 <unknown>
+#17 0x61579dacb633 <unknown>
+#18 0x7c77972abdeb <unknown>
+#19 0x7c779733f4dc <unknown>
+
+
+
+
+Errored scenarios:
+  features/cart.feature:8  Complete a purchase as a new customer
+
+0 features passed, 0 failed, 1 error, 0 skipped
+0 scenarios passed, 0 failed, 1 error, 0 skipped
+12 steps passed, 0 failed, 1 error, 5 skipped
+Took 0min 18.348s
